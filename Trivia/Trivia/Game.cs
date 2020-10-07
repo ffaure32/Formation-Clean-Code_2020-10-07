@@ -13,7 +13,6 @@ namespace Trivia
         private const int numberOfQuestionsPerCategory = 50;
         private const int minNumberOfPlayers = 2;
         private const int numberOfPlaces = 12;
-        private const int categoryFrequency = 4;
         private readonly List<Player> _players = new List<Player>();
 
         private readonly Questions questions = new Questions();
@@ -26,10 +25,10 @@ namespace Trivia
         {
             for (var i = 0; i < numberOfQuestionsPerCategory; i++)
             {
-                questions.AddQuestion("Pop", "Pop Question " + i);
-                questions.AddQuestion("Science", "Science Question " + i);
-                questions.AddQuestion("Sports", "Sports Question " + i);
-                questions.AddQuestion("Rock", "Rock Question " + i);
+                foreach (Category category in Enum.GetValues(typeof(Category)))
+                {
+                    questions.AddQuestion(category, category+" Question " + i);
+                }
             }
         }
 
@@ -113,16 +112,14 @@ namespace Trivia
             Console.WriteLine(questions.NextQuestion(CurrentCategory()));
         }
 
-        private string CurrentCategory()
+        private Category CurrentCategory()
         {
-            return (_players[_currentPlayer].Place % categoryFrequency) switch
-            {
-                0 => "Pop",
-                1 => "Science",
-                2 => "Sports",
-                3 => "Rock",
-                _ => null
-            };
+            return (Category) GetCategoryIndexForPlace();
+        }
+
+        private int GetCategoryIndexForPlace()
+        {
+            return _players[_currentPlayer].Place % Enum.GetValues(typeof(Category)).Length;
         }
 
         /// <summary>
