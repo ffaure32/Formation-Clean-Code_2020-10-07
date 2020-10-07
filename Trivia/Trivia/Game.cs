@@ -13,6 +13,7 @@ namespace Trivia
         private const int numberOfQuestionsPerCategory = 50;
         private const int minNumberOfPlayers = 2;
         private const int numberOfPlaces = 12;
+        private const int categoryFrequency = 4;
         private readonly List<string> _players = new List<string>();
 
         private readonly int[] _places = new int[sizeArray];
@@ -93,7 +94,10 @@ namespace Trivia
                     Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
                     // add roll to place
                     _places[_currentPlayer] = _places[_currentPlayer] + roll;
-                    if (_places[_currentPlayer] >= numberOfPlaces) _places[_currentPlayer] = _places[_currentPlayer] - numberOfPlaces;
+                    if (_places[_currentPlayer] >= numberOfPlaces) 
+                    {
+                        _places[_currentPlayer] = _places[_currentPlayer] - numberOfPlaces;
+                    }
 
                     Console.WriteLine(_players[_currentPlayer]
                             + "'s new location is "
@@ -110,7 +114,10 @@ namespace Trivia
             else
             {
                 _places[_currentPlayer] = _places[_currentPlayer] + roll;
-                if (_places[_currentPlayer] >= numberOfPlaces) _places[_currentPlayer] = _places[_currentPlayer] - numberOfPlaces;
+                if (_places[_currentPlayer] >= numberOfPlaces) 
+                {
+                    _places[_currentPlayer] = _places[_currentPlayer] - numberOfPlaces;
+                }
 
                 Console.WriteLine(_players[_currentPlayer]
                         + "'s new location is "
@@ -147,16 +154,23 @@ namespace Trivia
 
         private string CurrentCategory()
         {
-            if (_places[_currentPlayer] == 0) return "Pop";
-            if (_places[_currentPlayer] == 4) return "Pop";
-            if (_places[_currentPlayer] == 8) return "Pop";
-            if (_places[_currentPlayer] == 1) return "Science";
-            if (_places[_currentPlayer] == 5) return "Science";
-            if (_places[_currentPlayer] == 9) return "Science";
-            if (_places[_currentPlayer] == 2) return "Sports";
-            if (_places[_currentPlayer] == 6) return "Sports";
-            if (_places[_currentPlayer] == 10) return "Sports";
-            return "Rock";
+            if (_places[_currentPlayer] % categoryFrequency == 0)
+            {
+                return "Pop";
+            }
+            if (_places[_currentPlayer] % categoryFrequency == 1)
+            {
+                return "Science";
+            }
+            if (_places[_currentPlayer] % categoryFrequency == 2)
+            {
+                return "Sports";
+            }
+            if (_places[_currentPlayer] % categoryFrequency == 3)
+            {
+                return "Rock";
+            }
+            return null;
         }
 
         
@@ -180,14 +194,20 @@ namespace Trivia
 
                     var winner = !(_purses[_currentPlayer] == sizeArray);
                     _currentPlayer++;
-                    if (_currentPlayer == _players.Count) _currentPlayer = 0;
+                    if (_currentPlayer == _players.Count) 
+                    {
+                        _currentPlayer = 0;
+                    }
 
                     return winner;
                 }
                 else
                 {
                     _currentPlayer++;
-                    if (_currentPlayer == _players.Count) _currentPlayer = 0;
+                    if (_currentPlayer == _players.Count) 
+                    {
+                        _currentPlayer = 0;
+                    }
                     return true;
                 }
             }
@@ -202,7 +222,10 @@ namespace Trivia
 
                 var winner = !(_purses[_currentPlayer] == sizeArray);
                 _currentPlayer++;
-                if (_currentPlayer == _players.Count) _currentPlayer = 0;
+                if (_currentPlayer == _players.Count) 
+                {
+                    _currentPlayer = 0;
+                }
 
                 return winner;
             }
@@ -219,7 +242,10 @@ namespace Trivia
             _inPenaltyBox[_currentPlayer] = true;
 
             _currentPlayer++;
-            if (_currentPlayer == _players.Count) _currentPlayer = 0;
+            if (_currentPlayer == _players.Count) 
+            {
+                _currentPlayer = 0;
+            }
             return true;
         }
 
