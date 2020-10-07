@@ -22,9 +22,9 @@ namespace Trivia
         private readonly bool[] _inPenaltyBox = new bool[sizeArray];
 
         private readonly LinkedList<string> _Q1 = new LinkedList<string>();
-        private readonly LinkedList<string> Q2 = new LinkedList<string>();
+        private readonly LinkedList<string> _Q2 = new LinkedList<string>();
         private readonly LinkedList<string> _Q3 = new LinkedList<string>();
-        public LinkedList<string> _Q5 = new LinkedList<string>();
+        private readonly LinkedList<string> _Q4 = new LinkedList<string>();
 
 
         private int _currentPlayer;
@@ -35,25 +35,19 @@ namespace Trivia
             for (var i = 0; i < numberOfQuestionsPerCategory; i++)
             {
                 _Q1.AddLast("Pop Question " + i);
-                Q2.AddLast(("Science Question " + i));
-                _Q3.AddLast(("Sports Question " + i));
-                _Q5.AddLast(CreateRockQuestion(i));
+                _Q2.AddLast("Science Question " + i);
+                _Q3.AddLast("Sports Question " + i);
+                _Q4.AddLast("Rock Question " + i);
             }
-            //Shuf();
         }
 
         private void Shuf()
         {
             var shufpower = from s in _Q1
-                            from h in Q2
+                            from h in _Q2
                             let u = new { s, h }
                             select u;
             _Q3.Zip(shufpower).ToList().Sort((a, b) => Math.Abs(a.First.Length - (int)b.Second.h[0]));
-        }
-
-        public string CreateRockQuestion(int index)
-        {
-            return "Rock Question " + index;
         }
 
         public bool IsPlayable()
@@ -129,51 +123,49 @@ namespace Trivia
 
         private void AskQuestion()
         {
-            if (CurrentCategory() == "Pop")
+            switch (CurrentCategory())
             {
-                Console.WriteLine(_Q1.First());
-                _Q1.RemoveFirst();
+                case "Pop":
+                {
+                    Console.WriteLine(_Q1.First());
+                    _Q1.RemoveFirst();
+                    break;
+                }
+
+                case "Science":
+                {
+                    Console.WriteLine(_Q2.First());
+                    _Q2.RemoveFirst();
+                    break;
+                }
+
+                case "Sports":
+                {
+                    Console.WriteLine(_Q3.First());
+                    _Q3.RemoveFirst();
+                    break;
+                }
+
+                case "Rock":
+                {
+                    Console.WriteLine(_Q4.First());
+                    _Q4.RemoveFirst();
+                    break;
+                }
             }
-            if (CurrentCategory() == "Science")
-            {
-                Console.WriteLine(Q2.First());
-                Q2.RemoveFirst();
-            }
-            if (CurrentCategory() == "Sports")
-            {
-                Console.WriteLine(_Q3.First());
-                _Q3.RemoveFirst();
-            }
-            if (CurrentCategory() == "Rock")
-            {
-                Console.WriteLine(_Q5.First());
-                _Q5.RemoveFirst();
-            }
-            //Shuf();
         }
 
         private string CurrentCategory()
         {
-            if (_places[_currentPlayer] % categoryFrequency == 0)
+            return (_places[_currentPlayer] % categoryFrequency) switch
             {
-                return "Pop";
-            }
-            if (_places[_currentPlayer] % categoryFrequency == 1)
-            {
-                return "Science";
-            }
-            if (_places[_currentPlayer] % categoryFrequency == 2)
-            {
-                return "Sports";
-            }
-            if (_places[_currentPlayer] % categoryFrequency == 3)
-            {
-                return "Rock";
-            }
-            return null;
+                0 => "Pop",
+                1 => "Science",
+                2 => "Sports",
+                3 => "Rock",
+                _ => null
+            };
         }
-
-        
 
         /// <summary>
         /// To call when the answer is right
